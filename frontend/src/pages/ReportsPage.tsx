@@ -1,0 +1,226 @@
+import React, { useEffect, useState } from 'react';
+import { usePatient } from '../context/PatientContext';
+import { api } from '../api/client';
+import { Observation, TwinStateVersion, Alert, ReviewRecord } from '../api/types';
+import { ProvenanceBadge } from '../components/common/ProvenanceBadge';
+import {
+  FileText,
+  Download,
+  Printer,
+  ShieldAlert,
+  Calendar,
+  CheckCircle2,
+  FileCode,
+  FileSpreadsheet,
+} from 'lucide-react';
+
+export const ReportsPage: React.FC = () => {
+  const { selectedPatient } = usePatient();
+  const [observations, setObservations] = useState<Observation[]>([]);
+  const [twin, setTwin] = useState<TwinStateVersion | null>(null);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [reviews, setReviews] = useState<ReviewRecord[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!selectedPatient) return;
+    const loadReportData = async () => {
+      try {
+        setLoading(true);
+        const [obs, t, a, r] = await Promise.all([
+          api.getObservations(selectedPatient.id).catch(() => []),
+          api.getCurrentTwinState(selectedPatient.id).catch(() => null),
+          api.getAlerts(selectedPatient.id).catch(() => []),
+          api.getReviews(selectedPatient.id).catch(() => []),
+        ]);
+        setObservations(obs);
+        setTwin(t);
+        setAlerts(a);
+        setReviews(r);
+      } catch (e) {
+        console.error('Failed to load report data:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadReportData();
+  }, [selectedPatient?.id]);
+
+  const pdfUrl = selectedPatient ? api.getPdfReportUrl(selectedPatient.id) : '#';
+  const htmlUrl = selectedPatient ? api.getHtmlReportUrl(selectedPatient.id) : '#';
+
+  const latestReview = reviews[0];
+
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text">
+              Clinical Report Generator
+            </h1>
+            <span className="text-[10px] font-mono uppercase bg-accent-subtle accent-color px-2 py-0.5 rounded border border-accent">
+              Export Center
+            </span>
+          </div>
+          <p className="text-xs text-text-secondary mt-0.5">
+            Export authentic downloadable PDF and HTML reports compiled dynamically from persisted database records
+          </p>
+        </div>
+
+        {/* Real File Download Action Buttons */}
+        <div className="flex items-center gap-2">
+          <a
+            href={htmlUrl}
+            download={`POLYPULSE_Report_${selectedPatient?.mrn}.html`}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl border border-theme bg-surface hover:bg-surface-secondary text-text text-xs font-semibold shadow-xs transition-all"
+          >
+            <FileCode className="w-4 h-4 text-accent" />
+            Download HTML
+          </a>
+
+          <a
+            href={pdfUrl}
+            download={`POLYPULSE_Report_${selectedPatient?.mrn}.pdf`}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent-main hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-all"
+          >
+            <Download className="w-4 h-4" />
+            Download PDF Report
+          </a>
+        </div>
+      </div>
+
+      {/* Live Preview Paper Canvas */}
+      <div className="bg-surface border border-theme rounded-3xl p-6 sm:p-10 shadow-sm max-w-4xl mx-auto space-y-6 font-sans">
+        {/* Document Header */}
+        <div className="border-b-2 border-accent pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-text tracking-tight">
+              POLYPULSE — Longitudinal Lesion Digital Twin Report
+            </h2>
+            <p className="text-xs text-text-secondary mt-0.5">
+              Generated: {new Date().toUTCString()} • Research Prototype Record
+            </p>
+          </div>
+          <div className="text-right font-mono text-xs text-text-muted">
+            Twin State Version: <span className="font-bold text-text">v{twin?.version_number || 1}</span>
+          </div>
+        </div>
+
+        {/* Prominent Regulatory Notice */}
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-800 dark:text-rose-200 text-xs space-y-1">
+          <div className="font-bold flex items-center gap-1.5 uppercase tracking-wide text-[11px]">
+            <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+            Mandatory Regulatory Notice
+          </div>
+          <p className="leading-relaxed">
+            This report was generated by an academic research prototype. It is <strong>NOT clinically validated</strong>, is <strong>NOT a medical device</strong>, and provides <strong>NO diagnosis, malignancy probability score, or treatment instructions</strong>. All volume and rate calculations are formulaic derivatives intended solely for computational research evaluation.
+          </p>
+        </div>
+
+        {/* Patient Demographic Summary */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-surface-secondary border border-theme text-xs">
+          <div>
+            <span className="text-text-muted block text-[10px] uppercase font-mono">Patient Name</span>
+            <span className="font-semibold text-text">{selectedPatient?.full_name}</span>
+          </div>
+          <div>
+            <span className="text-text-muted block text-[10px] uppercase font-mono">Medical Record Number</span>
+            <span className="font-mono font-semibold text-text">{selectedPatient?.mrn}</span>
+          </div>
+          <div>
+            <span className="text-text-muted block text-[10px] uppercase font-mono">DOB / Demographics</span>
+            <span className="text-text">{selectedPatient?.date_of_birth} ({selectedPatient?.biological_sex})</span>
+          </div>
+          <div>
+            <span className="text-text-muted block text-[10px] uppercase font-mono">Review Status</span>
+            <span className="font-semibold text-emerald-700 dark:text-emerald-300">
+              {latestReview?.status || 'PENDING'}
+            </span>
+          </div>
+        </div>
+
+        {/* Serial Observations Table */}
+        <div className="space-y-2">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-accent border-b border-theme pb-1">
+            Longitudinal Serial Observations Table
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-surface-secondary text-text-muted text-[10px] uppercase">
+                <tr>
+                  <th className="py-2.5 px-3">Date</th>
+                  <th className="py-2.5 px-3">Source</th>
+                  <th className="py-2.5 px-3">Dimensions (L × W × D)</th>
+                  <th className="py-2.5 px-3">Derived Volume</th>
+                  <th className="py-2.5 px-3">Growth Rate</th>
+                  <th className="py-2.5 px-3">Data Quality</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-theme">
+                {observations.map((obs) => {
+                  const m = obs.measurements;
+                  return (
+                    <tr key={obs.id}>
+                      <td className="py-2.5 px-3 font-mono">{new Date(obs.observed_at).toLocaleDateString()}</td>
+                      <td className="py-2.5 px-3">
+                        <span className="font-medium text-text">{obs.source}</span>
+                      </td>
+                      <td className="py-2.5 px-3 font-mono">
+                        {obs.length_mm.toFixed(1)} × {obs.width_mm.toFixed(1)}
+                        {obs.depth_mm ? ` × ${obs.depth_mm.toFixed(1)} mm` : m?.depth_assumed ? ' × (D=W)' : ''}
+                      </td>
+                      <td className="py-2.5 px-3 font-mono font-semibold text-text">
+                        {m?.volume_mm3 ? `${m.volume_mm3.toFixed(1)} mm³` : 'Omitted'}
+                      </td>
+                      <td className="py-2.5 px-3 font-mono text-text">
+                        {m?.growth_rate_mm_per_month !== null && m?.growth_rate_mm_per_month !== undefined
+                          ? `${m.growth_rate_mm_per_month >= 0 ? '+' : ''}${m.growth_rate_mm_per_month.toFixed(2)} mm/mo`
+                          : 'Baseline'}
+                      </td>
+                      <td className="py-2.5 px-3 text-text-muted">
+                        Conf: {(obs.measurement_confidence * 100).toFixed(0)}% • Qual: {(obs.image_quality * 100).toFixed(0)}%
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Mathematical Formulas & Methodological Assumptions */}
+        <div className="space-y-2 text-xs">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-accent border-b border-theme pb-1">
+            Mathematical Formulas & Provenance Footnotes
+          </h3>
+          <ul className="space-y-1 text-text-secondary text-[11px] list-disc list-inside">
+            <li>
+              <strong>Ellipsoid Volume:</strong> V = (π / 6) · L · W · D. Where depth was omitted, volume was evaluated under the explicit spherical/prolate assumption D = W.
+            </li>
+            <li>
+              <strong>Serial Growth Rate:</strong> Rate = (ΔL / Δt_days) × 30.4375 mm/month.
+            </li>
+            <li>
+              <strong>Measurement Provenance:</strong> Derived strictly from stored serial observations. Pixel values require physical calibration factor (mm/px).
+            </li>
+          </ul>
+        </div>
+
+        {/* Clinical Sign-Off Notes */}
+        <div className="p-4 rounded-xl bg-surface-secondary border border-theme text-xs space-y-1">
+          <div className="font-bold text-text flex items-center justify-between">
+            <span>Clinician Review Verification</span>
+            <span className="font-mono text-[10px] text-text-muted">
+              {latestReview?.reviewed_at ? new Date(latestReview.reviewed_at).toLocaleDateString() : 'Pending'}
+            </span>
+          </div>
+          <p className="text-text-secondary text-[11px] leading-relaxed pt-1">
+            {latestReview?.review_notes || 'Pending clinical review entry.'}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};

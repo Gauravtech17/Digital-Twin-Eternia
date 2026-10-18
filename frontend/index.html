@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POLYPULSE — The Living Lesion Digital Twin</title>
+    <script>
+      // Apply persisted theme immediately before first paint to prevent flash
+      (function() {
+        try {
+          var savedTheme = localStorage.getItem('polypulse_theme');
+          // Default is white/light theme. Only apply 'dark' if explicitly chosen by user.
+          if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-surface text-text font-sans antialiased selection:bg-accent-subtle selection:text-accent">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

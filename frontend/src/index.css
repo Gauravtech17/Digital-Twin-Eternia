@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* BioTrack Reference Color Tokens */
+    --bg-main: #F7F5F5;
+    --bg-secondary: #F0ECEC;
+    --bg-card: #FFFFFF;
+    --bg-hover: #E8E3E3;
+    
+    /* Typography */
+    --text-primary: #040304;       /* Near-black text */
+    --text-secondary: #563843;     /* Muted plum text */
+    --text-muted: #A4968A;         /* Warm taupe */
+    
+    /* BioTrack Healthcare Accents */
+    --accent: #8FDBF6;             /* Soft clinical blue */
+    --accent-hover: #6BCBEF;
+    --accent-subtle: #E8F7FC;
+    --accent-border: #BCE9F9;
+    
+    --accent-plum: #563843;        /* Muted plum */
+    --accent-blush: #E0AEB2;       /* Blush pink */
+    --accent-blush-subtle: #FBF0F1;
+    --accent-rose: #C5B3B4;        /* Dusty rose */
+    --accent-taupe: #A4968A;       /* Warm taupe */
+    
+    --border-color: #E5DFDF;
+    --border-strong: #D5CCCC;
+    
+    /* Clinical Indicators */
+    --status-success: #10B981;
+    --status-success-bg: #ECFDF5;
+    --status-warning: #D97706;
+    --status-warning-bg: #FFFBEB;
+    --status-attention: #BD473B;   /* Restrained medical red */
+    --status-attention-bg: #FDF2F2;
+    --status-info: #8FDBF6;
+    --status-info-bg: #E8F7FC;
+    
+    --canvas-bg: #F0ECEC;
+  }
+
+  .dark {
+    /* BioTrack Deep Clinical Dark System */
+    --bg-main: #0B0A0C;
+    --bg-secondary: #141117;
+    --bg-card: #1C1820;
+    --bg-hover: #26212C;
+    
+    --text-primary: #F8F6F6;
+    --text-secondary: #C5B3B4;
+    --text-muted: #A4968A;
+    
+    --accent: #8FDBF6;             /* Soft clinical blue remains readable */
+    --accent-hover: #B4E8F9;
+    --accent-subtle: #192D38;
+    --accent-border: #2D4C5E;
+    
+    --accent-plum: #E0AEB2;
+    --accent-blush: #E0AEB2;
+    --accent-blush-subtle: #332128;
+    --accent-rose: #C5B3B4;
+    --accent-taupe: #A4968A;
+    
+    --border-color: #2D2633;
+    --border-strong: #3F3647;
+    
+    --status-success: #34D399;
+    --status-success-bg: #064E3B;
+    --status-warning: #FBBF24;
+    --status-warning-bg: #451A03;
+    --status-attention: #F87171;
+    --status-attention-bg: #450A0A;
+    --status-info: #8FDBF6;
+    --status-info-bg: #1E3A8A;
+    
+    --canvas-bg: #09080B;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom Semantic Utility Classes */
+.bg-surface {
+  background-color: var(--bg-card);
+}
+.bg-surface-secondary {
+  background-color: var(--bg-secondary);
+}
+.bg-surface-card {
+  background-color: var(--bg-card);
+}
+.bg-surface-hover:hover {
+  background-color: var(--bg-hover);
+}
+.text-text {
+  color: var(--text-primary);
+}
+.text-text-secondary {
+  color: var(--text-secondary);
+}
+.text-text-muted {
+  color: var(--text-muted);
+}
+.border-theme {
+  border-color: var(--border-color);
+}
+.border-theme-strong {
+  border-color: var(--border-strong);
+}
+
+/* BioTrack Brand Tokens */
+.accent-color {
+  color: #040304;
+}
+.dark .accent-color {
+  color: #8FDBF6;
+}
+.bg-accent-main {
+  background-color: #040304;
+  color: #FFFFFF;
+}
+.dark .bg-accent-main {
+  background-color: #8FDBF6;
+  color: #040304;
+}
+.bg-accent-subtle {
+  background-color: var(--accent-subtle);
+}
+.border-accent {
+  border-color: var(--accent-border);
+}
+
+/* BioTrack Soft Clinical Accents */
+.accent-blue {
+  color: #0284C7;
+}
+.bg-blue-subtle {
+  background-color: #E8F7FC;
+}
+.accent-blush {
+  color: #563843;
+}
+.bg-blush-subtle {
+  background-color: #FAF0F1;
+}
+
+/* Tabular Numerals for Medical Measurements */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Soft Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A4968A;
+}
