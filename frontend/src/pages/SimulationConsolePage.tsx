@@ -2,23 +2,18 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePatient } from '../context/PatientContext';
 import { ScanningModal } from '../components/simulation/ScanningModal';
+import { SpatialScanViewport } from '../components/simulation/SpatialScanViewport';
 import { ProvenanceBadge } from '../components/common/ProvenanceBadge';
 import { SimulationIngestResponse } from '../api/types';
 import {
-  Cpu,
   Radio,
   Play,
-  RotateCcw,
-  Sliders,
-  Sparkles,
   Zap,
   Box,
   CheckCircle2,
   Clock,
-  ShieldAlert,
   ArrowRight,
-  Activity,
-  Layers,
+  Sparkles,
 } from 'lucide-react';
 
 export const SimulationConsolePage: React.FC = () => {
@@ -60,36 +55,36 @@ export const SimulationConsolePage: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#20332F]">
               Simulation Console
             </h1>
-            <span className="text-[10px] font-mono uppercase bg-blue-subtle text-[#0284C7] dark:bg-[#192D38] dark:text-[#8FDBF6] px-2 py-0.5 rounded border border-[#BCE9F9] dark:border-[#2D4C5E] font-bold">
-              Wearable Stand-in
+            <span className="text-[10px] font-mono uppercase bg-[#E8F5F1] text-[#2F8F83] px-2 py-0.5 rounded border border-[#C6E4DC] font-bold">
+              Observation Acquisition
             </span>
           </div>
-          <p className="text-xs text-text-secondary mt-0.5">
+          <p className="text-xs text-[#71817D] mt-0.5">
             Configure simulated scan telemetry and execute real-time ultrasound acquisition workflow
           </p>
         </div>
 
         {/* Device Status Badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 text-xs shadow-xs font-semibold">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#21685F]/30 bg-[#E8F5F1] text-[#21685F] text-xs shadow-xs font-semibold">
+          <span className="w-2 h-2 rounded-full bg-[#2F8F83] animate-pulse" />
           <span>DEVICE STATUS: READY FOR SIMULATION</span>
         </div>
       </div>
 
       {/* Mandatory Non-Claim Medical Research Notice */}
-      <div className="p-4 rounded-2xl bg-surface border border-theme text-xs shadow-xs flex items-start gap-3">
-        <Radio className="w-5 h-5 text-[#563843] dark:text-[#8FDBF6] shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-white border border-[#DDE7E5] text-xs shadow-xs flex items-start gap-3">
+        <Radio className="w-5 h-5 text-[#2F8F83] shrink-0 mt-0.5" />
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-text uppercase tracking-wider text-[11px]">
+            <span className="font-bold text-[#20332F] uppercase tracking-wider text-[11px]">
               Proposed Future Wearable Architecture
             </span>
             <ProvenanceBadge type="SIMULATED" size="xs" />
           </div>
-          <p className="text-text-secondary leading-relaxed">
+          <p className="text-[#71817D] leading-relaxed">
             Continuous uterine ultrasound wearables do not currently exist and are not clinically approved. This console functions as an explicit <strong>software simulation stand-in</strong> demonstrating how continuous telemetry streams into the POLYPULSE longitudinal math engine and updates the patient's versioned digital twin.
           </p>
         </div>
@@ -100,13 +95,13 @@ export const SimulationConsolePage: React.FC = () => {
         {/* Left Column: Configuration Controls (7 Cols) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Card 1: Patient Target & Protocol Selection */}
-          <div className="bg-surface border border-theme rounded-3xl p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-theme pb-3">
+          <div className="bg-white border border-[#DDE7E5] rounded-3xl p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#DDE7E5] pb-3">
               <div>
-                <h2 className="text-sm font-bold text-text">1. Target Patient Cohort</h2>
-                <p className="text-xs text-text-secondary">Select the fictional patient for this assessment session</p>
+                <h2 className="text-sm font-bold text-[#20332F]">1. Target Patient Cohort</h2>
+                <p className="text-xs text-[#71817D]">Select the demonstration patient for this assessment session</p>
               </div>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-surface-secondary border border-theme text-text-muted">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#F5F9F8] border border-[#DDE7E5] text-[#71817D]">
                 Step 1 of 3
               </span>
             </div>
@@ -119,15 +114,15 @@ export const SimulationConsolePage: React.FC = () => {
                     key={p.id}
                     type="button"
                     onClick={() => setSelectedPatientId(p.id)}
-                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none ${
                       isSelected
-                        ? 'bg-blue-subtle text-[#0284C7] dark:bg-[#192D38] dark:text-[#8FDBF6] border-[#8FDBF6] dark:border-[#2D4C5E] font-bold shadow-xs'
-                        : 'bg-surface-secondary border-theme text-text hover:bg-surface-hover'
+                        ? 'bg-[#E8F5F1] text-[#2F8F83] border-[#C6E4DC] font-bold shadow-xs'
+                        : 'bg-[#F5F9F8] border-[#DDE7E5] text-[#20332F] hover:bg-[#EDF4F2]'
                     }`}
                   >
                     <div className="text-xs font-bold truncate">{p.full_name}</div>
-                    <div className="text-[10px] text-text-muted font-mono mt-0.5">{p.mrn}</div>
-                    <div className="mt-2 text-[10px] px-1.5 py-0.5 rounded bg-surface border border-theme inline-block text-text-secondary">
+                    <div className="text-[10px] text-[#71817D] font-mono mt-0.5">{p.mrn}</div>
+                    <div className="mt-2 text-[10px] px-1.5 py-0.5 rounded bg-white border border-[#DDE7E5] inline-block text-[#71817D]">
                       {p.observation_count} observations
                     </div>
                   </button>
@@ -137,13 +132,13 @@ export const SimulationConsolePage: React.FC = () => {
           </div>
 
           {/* Card 2: Configurable Scan Duration */}
-          <div className="bg-surface border border-theme rounded-3xl p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-theme pb-3">
+          <div className="bg-white border border-[#DDE7E5] rounded-3xl p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#DDE7E5] pb-3">
               <div>
-                <h2 className="text-sm font-bold text-text">2. Scan Duration Preset</h2>
-                <p className="text-xs text-text-secondary">Configurable countdown duration for demonstration verification</p>
+                <h2 className="text-sm font-bold text-[#20332F]">2. Scan Duration Preset</h2>
+                <p className="text-xs text-[#71817D]">Configurable countdown duration for demonstration verification</p>
               </div>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-surface-secondary border border-theme text-text-muted">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#F5F9F8] border border-[#DDE7E5] text-[#71817D]">
                 Step 2 of 3
               </span>
             </div>
@@ -152,53 +147,53 @@ export const SimulationConsolePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setDurationSeconds(60)}
-                className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer ${
+                className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none ${
                   durationSeconds === 60
-                    ? 'bg-blue-subtle border-[#8FDBF6] dark:bg-[#192D38] dark:border-[#2D4C5E] text-[#0284C7] dark:text-[#8FDBF6] font-bold shadow-xs'
-                    : 'bg-surface-secondary border-theme text-text-secondary hover:text-text hover:bg-surface-hover'
+                    ? 'bg-[#E8F5F1] border-[#C6E4DC] text-[#2F8F83] font-bold shadow-xs'
+                    : 'bg-[#F5F9F8] border-[#DDE7E5] text-[#71817D] hover:text-[#20332F] hover:bg-[#EDF4F2]'
                 }`}
               >
-                <Clock className="w-4 h-4 mx-auto mb-1 text-[#563843] dark:text-[#8FDBF6]" />
+                <Clock className="w-4 h-4 mx-auto mb-1 text-[#2F8F83]" />
                 <div className="text-sm font-mono font-bold tabular-nums">60s</div>
-                <div className="text-[10px] text-text-muted">Standard Protocol</div>
+                <div className="text-[10px] text-[#71817D]">Standard Protocol</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setDurationSeconds(10)}
-                className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer ${
+                className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none ${
                   durationSeconds === 10
-                    ? 'bg-blue-subtle border-[#8FDBF6] dark:bg-[#192D38] dark:border-[#2D4C5E] text-[#0284C7] dark:text-[#8FDBF6] font-bold shadow-xs'
-                    : 'bg-surface-secondary border-theme text-text-secondary hover:text-text hover:bg-surface-hover'
+                    ? 'bg-[#E8F5F1] border-[#C6E4DC] text-[#2F8F83] font-bold shadow-xs'
+                    : 'bg-[#F5F9F8] border-[#DDE7E5] text-[#71817D] hover:text-[#20332F] hover:bg-[#EDF4F2]'
                 }`}
               >
-                <Zap className="w-4 h-4 mx-auto mb-1 text-[#BD473B]" />
+                <Zap className="w-4 h-4 mx-auto mb-1 text-[#B77B36]" />
                 <div className="text-sm font-mono font-bold tabular-nums">10s</div>
-                <div className="text-[10px] text-[#BD473B] dark:text-rose-400 font-semibold">Demo Recommended</div>
+                <div className="text-[10px] text-[#B77B36] font-semibold">Demo Recommended</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setDurationSeconds(5)}
-                className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer ${
+                className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none ${
                   durationSeconds === 5
-                    ? 'bg-blue-subtle border-[#8FDBF6] dark:bg-[#192D38] dark:border-[#2D4C5E] text-[#0284C7] dark:text-[#8FDBF6] font-bold shadow-xs'
-                    : 'bg-surface-secondary border-theme text-text-secondary hover:text-text hover:bg-surface-hover'
+                    ? 'bg-[#E8F5F1] border-[#C6E4DC] text-[#2F8F83] font-bold shadow-xs'
+                    : 'bg-[#F5F9F8] border-[#DDE7E5] text-[#71817D] hover:text-[#20332F] hover:bg-[#EDF4F2]'
                 }`}
               >
-                <Sparkles className="w-4 h-4 mx-auto mb-1 text-emerald-600" />
+                <Sparkles className="w-4 h-4 mx-auto mb-1 text-[#21685F]" />
                 <div className="text-sm font-mono font-bold tabular-nums">5s</div>
-                <div className="text-[10px] text-text-muted">Fast Evaluation</div>
+                <div className="text-[10px] text-[#71817D]">Fast Evaluation</div>
               </button>
             </div>
           </div>
 
           {/* Card 3: Simulated Lesion Parameters */}
-          <div className="bg-surface border border-theme rounded-3xl p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-theme pb-3">
+          <div className="bg-white border border-[#DDE7E5] rounded-3xl p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#DDE7E5] pb-3">
               <div>
-                <h2 className="text-sm font-bold text-text">3. Simulated Lesion Calipers (Input Stream)</h2>
-                <p className="text-xs text-text-secondary">
+                <h2 className="text-sm font-bold text-[#20332F]">3. Simulated Lesion Calipers (Input Stream)</h2>
+                <p className="text-xs text-[#71817D]">
                   Target dimensions that the simulated scan will measure and submit to the twin
                 </p>
               </div>
@@ -207,7 +202,7 @@ export const SimulationConsolePage: React.FC = () => {
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-text mb-1.5">
+                <label className="block text-xs font-semibold text-[#20332F] mb-1.5">
                   Length (L mm)
                 </label>
                 <input
@@ -217,12 +212,12 @@ export const SimulationConsolePage: React.FC = () => {
                   max="35.0"
                   value={lengthMm}
                   onChange={(e) => setLengthMm(e.target.value)}
-                  className="w-full text-sm font-mono tabular-nums border border-theme rounded-xl p-2.5 bg-surface-secondary text-text focus:outline-none focus:ring-2 focus:ring-[#8FDBF6]"
+                  className="w-full text-sm font-mono tabular-nums border border-[#DDE7E5] rounded-xl p-2.5 bg-[#F5F9F8] text-[#20332F] focus:outline-none focus:ring-2 focus:ring-[#2F8F83]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-text mb-1.5">
+                <label className="block text-xs font-semibold text-[#20332F] mb-1.5">
                   Width (W mm)
                 </label>
                 <input
@@ -232,12 +227,12 @@ export const SimulationConsolePage: React.FC = () => {
                   max="30.0"
                   value={widthMm}
                   onChange={(e) => setWidthMm(e.target.value)}
-                  className="w-full text-sm font-mono tabular-nums border border-theme rounded-xl p-2.5 bg-surface-secondary text-text focus:outline-none focus:ring-2 focus:ring-[#8FDBF6]"
+                  className="w-full text-sm font-mono tabular-nums border border-[#DDE7E5] rounded-xl p-2.5 bg-[#F5F9F8] text-[#20332F] focus:outline-none focus:ring-2 focus:ring-[#2F8F83]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-text mb-1.5">
+                <label className="block text-xs font-semibold text-[#20332F] mb-1.5">
                   Depth (D mm)
                 </label>
                 <input
@@ -247,15 +242,15 @@ export const SimulationConsolePage: React.FC = () => {
                   max="30.0"
                   value={depthMm}
                   onChange={(e) => setDepthMm(e.target.value)}
-                  className="w-full text-sm font-mono tabular-nums border border-theme rounded-xl p-2.5 bg-surface-secondary text-text focus:outline-none focus:ring-2 focus:ring-[#8FDBF6]"
+                  className="w-full text-sm font-mono tabular-nums border border-[#DDE7E5] rounded-xl p-2.5 bg-[#F5F9F8] text-[#20332F] focus:outline-none focus:ring-2 focus:ring-[#2F8F83]"
                 />
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-surface-secondary border border-theme flex items-center justify-between text-xs">
-              <span className="text-text-muted">Calculated Ellipsoid Volume Preview:</span>
-              <span className="font-mono font-bold tabular-nums text-[#BD473B] dark:text-[#E0AEB2]">
-                {previewVolume} mm³ <span className="font-normal text-[10px] text-text-muted">(π/6·L·W·D)</span>
+            <div className="p-3 rounded-xl bg-[#F5F9F8] border border-[#DDE7E5] flex items-center justify-between text-xs">
+              <span className="text-[#71817D]">Calculated Ellipsoid Volume Preview:</span>
+              <span className="font-mono font-bold tabular-nums text-[#B77B36]">
+                {previewVolume} mm³ <span className="font-normal text-[10px] text-[#71817D]">(π/6·L·W·D)</span>
               </span>
             </div>
           </div>
@@ -263,36 +258,36 @@ export const SimulationConsolePage: React.FC = () => {
 
         {/* Right Column: Execution Hero & Workflow Guide (5 Cols) */}
         <div className="lg:col-span-5 space-y-6">
-          {/* Main Execution Card */}
-          <div className="bg-gradient-to-b from-blue-500/10 via-surface to-surface border border-[#8FDBF6]/50 dark:border-[#2D4C5E] rounded-3xl p-6 shadow-sm space-y-6 text-center">
-            <div className="w-16 h-16 rounded-3xl bg-[#040304] dark:bg-[#8FDBF6] flex items-center justify-center text-white dark:text-[#040304] mx-auto shadow-md">
-              <Radio className="w-8 h-8 animate-pulse" />
+          {/* Main Execution Card with Pale Mint Gradient Accent */}
+          <div className="bg-white border border-[#DDE7E5] rounded-3xl p-6 shadow-xs space-y-6 text-center">
+            <div className="w-16 h-16 rounded-3xl bg-[#21685F] flex items-center justify-center text-white mx-auto shadow-sm">
+              <Radio className="w-8 h-8 text-[#E8F5F1] animate-pulse" />
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-text">Launch Live Assessment</h3>
-              <p className="text-xs text-text-secondary mt-1">
+              <h3 className="text-lg font-bold text-[#20332F]">Launch Live Assessment</h3>
+              <p className="text-xs text-[#71817D] mt-1">
                 Initiate the simulated ultrasound scanning loop for{' '}
-                <strong className="text-text">{selectedPatient?.full_name}</strong>
+                <strong className="text-[#20332F]">{selectedPatient?.full_name}</strong>
               </p>
             </div>
 
-            <div className="bg-surface border border-theme rounded-2xl p-4 text-xs space-y-2 text-left">
+            <div className="bg-[#F5F9F8] border border-[#DDE7E5] rounded-2xl p-4 text-xs space-y-2 text-left">
               <div className="flex justify-between">
-                <span className="text-text-muted">Selected Duration:</span>
-                <span className="font-bold font-mono tabular-nums text-text">{durationSeconds} seconds</span>
+                <span className="text-[#71817D]">Selected Duration:</span>
+                <span className="font-bold font-mono tabular-nums text-[#20332F]">{durationSeconds} seconds</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-muted">Acoustic Plane:</span>
-                <span className="font-mono text-text">Sagittal & Transverse</span>
+                <span className="text-[#71817D]">Acoustic Plane:</span>
+                <span className="font-mono text-[#20332F]">Sagittal & Transverse</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-muted">Expected Calipers:</span>
-                <span className="font-mono tabular-nums text-text">{lNum} × {wNum} mm</span>
+                <span className="text-[#71817D]">Expected Calipers:</span>
+                <span className="font-mono tabular-nums text-[#20332F]">{lNum} × {wNum} mm</span>
               </div>
-              <div className="flex justify-between border-t border-theme pt-2">
-                <span className="text-text-muted">Idempotency Protocol:</span>
-                <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-300 font-semibold">
+              <div className="flex justify-between border-t border-[#DDE7E5] pt-2">
+                <span className="text-[#71817D]">Idempotency Protocol:</span>
+                <span className="text-[10px] font-mono text-[#21685F] font-semibold">
                   Guaranteed Single Delivery
                 </span>
               </div>
@@ -303,42 +298,42 @@ export const SimulationConsolePage: React.FC = () => {
               type="button"
               onClick={handleStartAssessment}
               disabled={!selectedPatient}
-              className="w-full py-4 px-6 rounded-2xl bg-[#040304] text-white hover:bg-neutral-800 dark:bg-[#8FDBF6] dark:text-[#040304] dark:hover:bg-[#BCE9F9] font-bold text-sm shadow-md transition-all flex items-center justify-center gap-3 group hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className="w-full py-4 px-6 rounded-2xl bg-[#21685F] text-white hover:bg-[#1B544D] font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-3 group hover:scale-[1.01] active:scale-[0.99] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none"
             >
-              <Play className="w-5 h-5 fill-current transition-transform group-hover:scale-110" />
+              <Play className="w-5 h-5 fill-current text-[#E8F5F1] transition-transform group-hover:scale-110" />
               <span>Start Assessment ({durationSeconds}s)</span>
             </button>
           </div>
 
           {/* Latest Session Feedback Card (If run) */}
           {latestAssessment && (
-            <div className="bg-surface border border-theme rounded-3xl p-5 shadow-xs space-y-3">
+            <div className="bg-white border border-[#DDE7E5] rounded-3xl p-5 shadow-xs space-y-3 animate-in fade-in">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#21685F]">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Last Assessment Ingested</span>
                 </div>
-                <span className="text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded font-bold">
+                <span className="text-[10px] font-mono uppercase bg-[#E8F5F1] text-[#21685F] px-2 py-0.5 rounded font-bold border border-[#C6E4DC]">
                   Twin State v{latestAssessment.twin_version.version_number}
                 </span>
               </div>
 
-              <p className="text-xs text-text-secondary">
-                Observation successfully recorded on{' '}
+              <p className="text-xs text-[#71817D]">
+                Observation successfully recorded at{' '}
                 {new Date(latestAssessment.observation.observed_at).toLocaleTimeString()}.
               </p>
 
               <div className="flex items-center gap-2 pt-2">
                 <button
                   onClick={() => navigate('/twin')}
-                  className="flex-1 py-2 px-3 rounded-xl bg-[#040304] text-white dark:bg-[#8FDBF6] dark:text-[#040304] text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="flex-1 py-2 px-3 rounded-xl bg-[#21685F] text-white hover:bg-[#1B544D] text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  <Box className="w-3.5 h-3.5" />
+                  <Box className="w-3.5 h-3.5 text-[#E8F5F1]" />
                   <span>Open 3D Twin</span>
                 </button>
                 <button
                   onClick={() => navigate('/observations')}
-                  className="flex-1 py-2 px-3 rounded-xl border border-theme bg-surface hover:bg-surface-hover text-text text-xs font-semibold transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  className="flex-1 py-2 px-3 rounded-xl border border-[#DDE7E5] bg-white hover:bg-[#F5F9F8] text-[#20332F] text-xs font-semibold transition-all flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <span>Compare</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -348,37 +343,76 @@ export const SimulationConsolePage: React.FC = () => {
           )}
 
           {/* Workflow Sequence Guide */}
-          <div className="bg-surface border border-theme rounded-3xl p-5 shadow-xs space-y-3">
-            <h4 className="text-xs font-bold text-text uppercase tracking-wider">
+          <div className="bg-white border border-[#DDE7E5] rounded-3xl p-5 shadow-xs space-y-3">
+            <h4 className="text-xs font-bold text-[#20332F] uppercase tracking-wider">
               Core Digital-Twin Loop
             </h4>
-            <div className="space-y-2 text-xs text-text-secondary">
+            <div className="space-y-2 text-xs text-[#71817D]">
               <div className="flex items-start gap-2.5">
-                <div className="w-5 h-5 rounded-full bg-surface-secondary border border-theme flex items-center justify-center text-[10px] font-bold text-text shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#E8F5F1] text-[#2F8F83] border border-[#C6E4DC] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                   1
                 </div>
                 <span>Start assessment to run live ultrasound sector visualization.</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <div className="w-5 h-5 rounded-full bg-surface-secondary border border-theme flex items-center justify-center text-[10px] font-bold text-text shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#E8F5F1] text-[#2F8F83] border border-[#C6E4DC] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                   2
                 </div>
                 <span>Countdown timer executes across 4 acoustic calibration phases.</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <div className="w-5 h-5 rounded-full bg-surface-secondary border border-theme flex items-center justify-center text-[10px] font-bold text-text shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#E8F5F1] text-[#2F8F83] border border-[#C6E4DC] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                   3
                 </div>
                 <span>Backend persists observation, computes volume, and creates twin-state version.</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <div className="w-5 h-5 rounded-full bg-surface-secondary border border-theme flex items-center justify-center text-[10px] font-bold text-text shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#E8F5F1] text-[#2F8F83] border border-[#C6E4DC] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                   4
                 </div>
                 <span>Interactive 3D model immediately updates to reflect the new lesion geometry.</span>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Live 3D Spatial Grid Scanning Interactive Stage with Pale Mint Header */}
+      <div className="bg-white border border-[#DDE7E5] rounded-3xl p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#DDE7E5] pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-[#20332F]">
+                Live 3D Spatial Grid Scanning Simulation
+              </h2>
+              <span className="text-[10px] font-mono uppercase bg-[#E8F5F1] text-[#2F8F83] px-2 py-0.5 rounded border border-[#C6E4DC] font-bold">
+                uterus.glb
+              </span>
+            </div>
+            <p className="text-xs text-[#71817D] mt-0.5">
+              Step-by-step 42-point serpentine raster traversal examining uterine anatomy and encountering illustrative polyp candidate
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleStartAssessment}
+            className="px-4 py-2 rounded-xl bg-[#21685F] text-white hover:bg-[#1B544D] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none"
+          >
+            <Play className="w-3.5 h-3.5 fill-current text-[#E8F5F1]" />
+            <span>Launch Acquisition Session</span>
+          </button>
+        </div>
+
+        <div className="h-[460px] sm:h-[520px] rounded-2xl overflow-hidden border border-[#DDE7E5] bg-[#F5F9F8] relative">
+          <SpatialScanViewport
+            durationSeconds={durationSeconds}
+            targetLengthMm={lNum}
+            targetWidthMm={wNum}
+            targetDepthMm={dNum}
+            autoStart={false}
+            onInspectInTwin={() => navigate('/twin')}
+            className="w-full h-full"
+          />
         </div>
       </div>
 

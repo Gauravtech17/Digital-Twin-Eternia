@@ -11,16 +11,19 @@ export const HolographicEnvironment: React.FC<HolographicEnvironmentProps> = ({
 }) => {
   const particlesRef = useRef<THREE.Points>(null);
 
-  // Subtle ambient floating dust particles in light cyan
-  const [particlePositions] = useMemo(() => {
+  // Subtle ambient floating dust particles in light cyan (deterministic generation ensures component purity)
+  const particlePositions = useMemo(() => {
     const count = 75;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      positions[i * 3 + 0] = (Math.random() - 0.5) * 7.5;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 4.5 + 0.2;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 5.0;
+      const seed1 = Math.sin(i * 12.9898 + 78.233);
+      const seed2 = Math.cos(i * 37.719 + 11.135);
+      const seed3 = Math.sin(i * 93.913 + 45.312);
+      positions[i * 3 + 0] = seed1 * 3.75;
+      positions[i * 3 + 1] = seed2 * 2.25 + 0.2;
+      positions[i * 3 + 2] = seed3 * 2.5;
     }
-    return [positions];
+    return positions;
   }, []);
 
   useFrame(({ clock }) => {

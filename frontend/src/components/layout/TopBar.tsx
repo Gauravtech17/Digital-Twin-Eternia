@@ -35,7 +35,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
         </button>
 
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-2xl bg-accent-main flex items-center justify-center text-white shadow-sm shadow-purple-500/20 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-2xl bg-accent-main flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
             <HeartPulse className="w-5 h-5" />
           </div>
           <div>
@@ -121,9 +121,9 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
           aria-label="Toggle visual theme"
         >
           {theme === 'light' ? (
-            <Moon className="w-4 h-4 text-purple-600 hover:text-purple-700" />
+            <Moon className="w-4 h-4 text-[#2F8F83] hover:text-[#21685F]" />
           ) : (
-            <Sun className="w-4 h-4 text-amber-400 hover:text-amber-300" />
+            <Sun className="w-4 h-4 text-[#B77B36] hover:text-amber-500" />
           )}
         </button>
       </div>

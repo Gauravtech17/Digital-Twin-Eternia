@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import { usePatient } from '../../context/PatientContext';
 import { Patient, SimulationIngestResponse } from '../../api/types';
-import { HolographicViewport, HolographicScanPhase } from '../twin/HolographicViewport';
+import { SpatialScanViewport } from './SpatialScanViewport';
 import {
   X,
   Play,
@@ -278,18 +278,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
 
   const remainingSeconds = Math.max(0, Math.ceil(durationSeconds - elapsedSeconds));
 
-  const viewportScanPhase: HolographicScanPhase =
-    lifecycle === 'INITIALIZING'
-      ? 'INITIALIZING'
-      : lifecycle === 'ACTIVE_SCANNING'
-      ? 'ACTIVE_SCANNING'
-      : lifecycle === 'LESION_ANALYSIS'
-      ? 'LESION_ANALYSIS'
-      : lifecycle === 'SAVING'
-      ? 'SAVING'
-      : lifecycle === 'COMPLETED'
-      ? 'COMPLETED'
-      : 'IDLE';
+
 
   return (
     <div
@@ -301,7 +290,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
         {/* 1. Modal Top Bar */}
         <div className="px-6 py-4 border-b border-theme flex items-center justify-between bg-surface-secondary/70">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-blue-subtle border border-[#8FDBF6] flex items-center justify-center text-[#0284C7]">
+            <div className="w-8 h-8 rounded-xl bg-[#E8F5F1] border border-[#DDE7E5] flex items-center justify-center text-[#21685F]">
               <Radio className="w-4 h-4 animate-pulse" />
             </div>
             <div>
@@ -309,7 +298,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                 <h2 className="text-sm sm:text-base font-bold text-text tracking-wide">
                   Digital Twin Assessment Session
                 </h2>
-                <span className="text-[10px] font-mono uppercase bg-blue-subtle text-[#0284C7] dark:bg-[#192D38] dark:text-[#8FDBF6] px-2 py-0.5 rounded border border-[#BCE9F9] dark:border-[#2D4C5E] font-bold">
+                <span className="text-[10px] font-mono uppercase bg-[#E8F5F1] text-[#21685F] px-2 py-0.5 rounded-full border border-[#DDE7E5] font-bold">
                   SIMULATION
                 </span>
               </div>
@@ -331,30 +320,30 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
 
         {/* 2. Main Central Workspace Grid */}
         <div className="p-6 overflow-y-auto flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left: 3D Uterus Viewport (7 Cols) */}
-          <div className="lg:col-span-7 bg-[#F4F9FD] border border-theme rounded-3xl overflow-hidden flex flex-col h-[380px] sm:h-[440px] relative shadow-inner">
-            <HolographicViewport
-              lesionLengthMm={targetLengthMm}
-              lesionWidthMm={targetWidthMm}
-              lesionDepthMm={targetDepthMm}
-              isScanning={lifecycle === 'ACTIVE_SCANNING'}
-              scanPhase={viewportScanPhase}
-              scanProgress={scanPlaneProgress}
-              showAnnotation={lifecycle === 'LESION_ANALYSIS' || lifecycle === 'SAVING' || lifecycle === 'COMPLETED'}
-              showPedestal={false}
-              showParticles={true}
-              autoRotate={lifecycle === 'COMPLETED' || lifecycle === 'CANCELLED'}
-              showHudControls={true}
+          {/* Left: 3D Spatial Grid Scanning Viewport (7 Cols) */}
+          <div className="lg:col-span-7 bg-[#F5F9F8] border border-theme rounded-3xl overflow-hidden flex flex-col h-[400px] sm:h-[460px] relative shadow-inner">
+            <SpatialScanViewport
+              durationSeconds={durationSeconds}
+              targetLengthMm={targetLengthMm}
+              targetWidthMm={targetWidthMm}
+              targetDepthMm={targetDepthMm}
+              autoStart={true}
+              onCandidateEncountered={() => {
+                setLifecycle('LESION_ANALYSIS');
+              }}
+              onScanCompleted={() => {
+                if (!hasTriggeredSaveRef.current) {
+                  hasTriggeredSaveRef.current = true;
+                  isRunningRef.current = false;
+                  executePersistence();
+                }
+              }}
+              onInspectInTwin={() => {
+                onClose();
+                navigate('/twin');
+              }}
               className="w-full h-full"
             />
-
-            {/* Live Scanning Status Pill */}
-            <div className="absolute top-4 left-4 z-10 pointer-events-none">
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-[#8FDBF6] text-[10px] font-mono font-bold text-[#0284C7] shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-ping" />
-                <span>{currentPhaseConfig.badgeText}</span>
-              </div>
-            </div>
           </div>
 
           {/* Right: Telemetry & Countdown Widget (5 Cols) */}
@@ -368,7 +357,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                     cx="50"
                     cy="50"
                     r="42"
-                    stroke="#E2E8F0"
+                    stroke="#DDE7E5"
                     strokeWidth="6"
                     fill="transparent"
                   />
@@ -378,10 +367,10 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                     r="42"
                     stroke={
                       lifecycle === 'COMPLETED'
-                        ? '#10B981'
+                        ? '#21685F'
                         : lifecycle === 'ERROR'
-                        ? '#FA727A'
-                        : '#0284C7'
+                        ? '#B84C4C'
+                        : '#2F8F83'
                     }
                     strokeWidth="6"
                     strokeDasharray={263.89}
@@ -400,7 +389,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                   <span className="text-[10px] font-mono text-text-muted">
                     {progressPercent}% Complete
                   </span>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1 bg-blue-subtle text-[#0284C7] border border-[#BCE9F9]">
+                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1 bg-[#E8F5F1] text-[#21685F] border border-[#DDE7E5]">
                     {lifecycle}
                   </span>
                 </div>
@@ -421,7 +410,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
             <div className="p-4 rounded-3xl bg-surface border border-theme shadow-xs space-y-3">
               <div className="flex items-center justify-between border-b border-theme pb-2">
                 <span className="text-[11px] font-bold uppercase text-text tracking-wider flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <Activity className="w-3.5 h-3.5 text-[#2F8F83]" />
                   Extracted Lesion Calipers
                 </span>
                 <span className="text-[10px] font-mono text-text-muted">Synthetic</span>
@@ -442,7 +431,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                 </div>
                 <div className="p-2 rounded-xl bg-surface-secondary border border-theme">
                   <span className="text-[9px] text-text-muted block font-sans">Volume (V)</span>
-                  <span className="font-bold text-sm text-[#0284C7] tabular-nums">
+                  <span className="font-bold text-sm text-[#B77B36] tabular-nums">
                     {previewVolume} <span className="text-[9px] text-text-muted font-normal">mm³</span>
                   </span>
                 </div>
@@ -467,15 +456,15 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                   key={p.key}
                   className={`p-2 rounded-xl border flex flex-col justify-between transition-all ${
                     isCurrent
-                      ? 'border-[#0284C7] bg-[#0284C7]/10 text-[#0284C7] font-bold shadow-xs'
+                      ? 'border-[#2F8F83] bg-[#E8F5F1] text-[#21685F] font-bold shadow-xs'
                       : isPast
-                      ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+                      ? 'border-[#2F8F83]/40 bg-[#E8F5F1]/50 text-[#21685F]'
                       : 'border-theme bg-surface text-text-muted'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="font-mono text-[9px] opacity-70">PHASE {p.stepNumber}</span>
-                    {isPast && <CheckCircle2 className="w-3 h-3 text-emerald-500" />}
+                    {isPast && <CheckCircle2 className="w-3 h-3 text-[#21685F]" />}
                   </div>
                   <span className="truncate">{p.title}</span>
                 </div>
@@ -489,17 +478,17 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
           {/* Status Message or Error Display */}
           <div className="flex items-center gap-2 text-xs">
             {lifecycle === 'ERROR' ? (
-              <div className="flex items-center gap-2 text-[#FA727A]">
+              <div className="flex items-center gap-2 text-[#B84C4C]">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span className="font-medium">{errorMessage}</span>
               </div>
             ) : lifecycle === 'SAVING' ? (
-              <div className="flex items-center gap-2 text-[#0284C7]">
+              <div className="flex items-center gap-2 text-[#2F8F83]">
                 <Loader2 className="w-4 h-4 animate-spin shrink-0" />
                 <span>Transmitting observation to digital twin database...</span>
               </div>
             ) : lifecycle === 'COMPLETED' ? (
-              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+              <div className="flex items-center gap-2 text-[#21685F]">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span className="font-semibold">
                   Observation committed! Twin updated to version v{result?.twin_version.version_number}.
@@ -507,7 +496,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
               </div>
             ) : (
               <div className="flex items-center gap-2 text-text-muted text-[11px] font-mono">
-                <Radio className="w-3.5 h-3.5 text-[#0284C7]" />
+                <Radio className="w-3.5 h-3.5 text-[#2F8F83]" />
                 <span>Simulated Ultrasound Transducer Streaming Active</span>
               </div>
             )}
@@ -519,7 +508,7 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
               <button
                 type="button"
                 onClick={executePersistence}
-                className="px-4 py-2 rounded-xl bg-[#FA727A] hover:bg-[#E85563] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-[#B84C4C] hover:bg-[#A33B3B] text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retry Save</span>
@@ -534,16 +523,26 @@ export const ScanningModal: React.FC<ScanningModalProps> = ({
                     onClose();
                     navigate('/twin');
                   }}
-                  className="px-4 py-2 rounded-xl bg-[#040304] text-white hover:bg-neutral-800 dark:bg-[#0284C7] dark:text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-[#21685F] text-white hover:bg-[#1A534C] text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
-                  <Box className="w-3.5 h-3.5" />
+                  <Box className="w-3.5 h-3.5 text-white/90" />
                   <span>Inspect in Digital Twin</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button
                   type="button"
+                  onClick={() => {
+                    onClose();
+                    navigate('/observations');
+                  }}
+                  className="px-4 py-2 rounded-xl border border-theme bg-surface hover:bg-surface-secondary text-text text-xs font-semibold transition-all cursor-pointer"
+                >
+                  View in Observations
+                </button>
+                <button
+                  type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-xl border border-theme text-text-secondary hover:text-text hover:bg-surface text-xs font-semibold transition-all cursor-pointer"
+                  className="px-3 py-2 rounded-xl text-text-secondary hover:text-text text-xs transition-all cursor-pointer"
                 >
                   Close
                 </button>

@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePatient } from '../context/PatientContext';
-import { useTheme } from '../context/ThemeContext';
 import { api } from '../api/client';
 import { TwinStateVersion, Observation } from '../api/types';
 import { ProvenanceBadge } from '../components/common/ProvenanceBadge';
 import { HolographicViewport } from '../components/twin/HolographicViewport';
 import { ScanningModal } from '../components/simulation/ScanningModal';
+import { LongitudinalChart } from '../components/common/LongitudinalChart';
 import {
   Activity,
   Box,
   Play,
   Calendar,
-  Layers,
   ArrowRight,
   ShieldAlert,
-  Clock,
-  CheckCircle2,
-  Radio,
+  ListOrdered,
+  Columns,
+  Eye,
 } from 'lucide-react';
 
 export const OverviewPage: React.FC = () => {
   const { selectedPatient, reloadPatients, dataVersion } = usePatient();
-  const { theme } = useTheme();
+  const navigate = useNavigate();
 
   const [twinState, setTwinState] = useState<TwinStateVersion | null>(null);
   const [observations, setObservations] = useState<Observation[]>([]);
@@ -53,213 +50,291 @@ export const OverviewPage: React.FC = () => {
     loadOverviewData();
   }, [selectedPatient?.id, dataVersion]);
 
-  const latestObs = observations[observations.length - 1];
+  const latestObs = observations.length > 0 ? observations[observations.length - 1] : null;
+  const availableComparisonsCount =
+    observations.length >= 2 ? observations.length - 1 : 0;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      {/* 1. Hero Card: Selected Patient, Device Readiness, & Prominent Start Assessment */}
-      <div className="bg-surface border border-theme rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      {/* 1. Header Banner: Patient Identity, Status & Primary Actions with Pale Mint Gradient */}
+      <div className="bg-mint-header border border-[#DDE7E5] rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-subtle text-[#0284C7] dark:bg-[#192D38] dark:text-[#8FDBF6] border border-[#BCE9F9] dark:border-[#2D4C5E]">
-              Active Patient Track
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#E8F5F1] text-[#2F8F83] border border-[#C6E4DC]">
+              Demonstration Subject
             </span>
             <span className="text-xs text-text-muted font-mono">{selectedPatient?.mrn}</span>
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#21685F] bg-[#E8F5F1] border border-[#21685F]/20 px-2.5 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2F8F83] animate-pulse" />
               Device Status: Ready for Simulation
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#20332F]">
             {selectedPatient?.full_name}
           </h1>
 
-          <p className="text-xs sm:text-sm text-text-secondary">
-            DOB: {selectedPatient?.date_of_birth} • Sex: {selectedPatient?.biological_sex} • Protocol: Longitudinal Polyp Surveillance
+          <p className="text-xs text-[#71817D]">
+            DOB: {selectedPatient?.date_of_birth} • Sex: {selectedPatient?.biological_sex} • Surveillance: Endometrial Polyp Twin Track
           </p>
         </div>
 
-        {/* Primary Call to Action */}
+        {/* Primary Call to Action Buttons */}
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <button
             type="button"
             onClick={() => setIsScanModalOpen(true)}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#040304] text-white hover:bg-neutral-800 dark:bg-[#8FDBF6] dark:text-[#040304] dark:hover:bg-[#BCE9F9] text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2.5 group cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-[#21685F] text-white hover:bg-[#1B544D] text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none"
           >
-            <Play className="w-4 h-4 fill-current transition-transform group-hover:scale-110" />
-            <span>Start Assessment</span>
+            <Play className="w-4 h-4 fill-current text-[#E8F5F1]" />
+            <span>Begin Assessment</span>
           </button>
           <Link
             to="/twin"
-            className="w-full sm:w-auto px-4 py-3 rounded-2xl border border-theme bg-surface-secondary hover:bg-surface-hover text-text text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-3 rounded-2xl border border-[#DDE7E5] bg-white hover:bg-[#F5F9F8] text-[#20332F] text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#2F8F83] focus-visible:outline-none"
           >
-            <Box className="w-4 h-4 text-[#563843] dark:text-[#8FDBF6]" />
-            <span>Full 3D Twin</span>
+            <Box className="w-4 h-4 text-[#2F8F83]" />
+            <span>Inspect 3D Digital Twin</span>
           </Link>
         </div>
       </div>
 
-      {/* 2. Central Split: Interactive 3D Digital Twin Preview & Longitudinal Telemetry */}
+      {/* 2. Operational Summary Metrics Bar (Real Data Driven) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Metric 1: Persisted Observations */}
+        <div className="p-4 rounded-3xl bg-white border border-[#DDE7E5] shadow-xs space-y-1 hover:border-[#C6E4DC] transition-colors">
+          <div className="flex items-center justify-between text-[#71817D] text-[11px] font-semibold uppercase tracking-wider">
+            <span>Persisted Observations</span>
+            <ListOrdered className="w-3.5 h-3.5 text-[#2F8F83]" />
+          </div>
+          <div className="text-2xl font-black font-mono tabular-nums text-[#20332F]">
+            {observations.length}
+          </div>
+          <p className="text-[10px] text-[#71817D]">Chronological scan records</p>
+        </div>
+
+        {/* Metric 2: Latest Assessment Date */}
+        <div className="p-4 rounded-3xl bg-white border border-[#DDE7E5] shadow-xs space-y-1 hover:border-[#C6E4DC] transition-colors">
+          <div className="flex items-center justify-between text-[#71817D] text-[11px] font-semibold uppercase tracking-wider">
+            <span>Latest Assessment</span>
+            <Calendar className="w-3.5 h-3.5 text-[#2F8F83]" />
+          </div>
+          <div className="text-base font-bold font-mono text-[#20332F]">
+            {latestObs ? new Date(latestObs.observed_at).toLocaleDateString() : 'None Recorded'}
+          </div>
+          <p className="text-[10px] text-[#71817D]">
+            {latestObs ? `State v${twinState?.version_number || 1} synchronized` : 'Awaiting baseline scan'}
+          </p>
+        </div>
+
+        {/* Metric 3: Historical Comparisons Available */}
+        <div className="p-4 rounded-3xl bg-white border border-[#DDE7E5] shadow-xs space-y-1 hover:border-[#C6E4DC] transition-colors">
+          <div className="flex items-center justify-between text-[#71817D] text-[11px] font-semibold uppercase tracking-wider">
+            <span>Serial Comparisons</span>
+            <Columns className="w-3.5 h-3.5 text-[#2F8F83]" />
+          </div>
+          <div className="text-2xl font-black font-mono tabular-nums text-[#20332F]">
+            {availableComparisonsCount}
+          </div>
+          <p className="text-[10px] text-[#71817D]">
+            {availableComparisonsCount > 0 ? 'Pairwise deltas available' : 'Requires ≥ 2 scans'}
+          </p>
+        </div>
+
+        {/* Metric 4: Latest Caliper Measurement */}
+        <div className="p-4 rounded-3xl bg-white border border-[#DDE7E5] shadow-xs space-y-1 hover:border-[#C6E4DC] transition-colors">
+          <div className="flex items-center justify-between text-[#71817D] text-[11px] font-semibold uppercase tracking-wider">
+            <span>Latest Dimension</span>
+            <Activity className="w-3.5 h-3.5 text-[#2F8F83]" />
+          </div>
+          <div className="text-base font-bold font-mono tabular-nums text-[#20332F]">
+            {twinState ? `${twinState.lesion_length_mm.toFixed(1)} × ${twinState.lesion_width_mm.toFixed(1)} mm` : '—'}
+          </div>
+          <p className="text-[10px] text-[#71817D]">
+            {twinState?.lesion_volume_mm3 ? `Vol: ${twinState.lesion_volume_mm3.toFixed(1)} mm³ (derived)` : 'Illustrative'}
+          </p>
+        </div>
+      </div>
+
+      {/* 3. Central Stage: 3D Digital Twin Viewport & Telemetry */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: 3D Twin Mini Preview Viewport (7 Cols) */}
-        <div className="lg:col-span-7 bg-surface border border-theme rounded-3xl overflow-hidden shadow-xs flex flex-col h-[420px] relative">
-          <div className="p-4 border-b border-theme flex items-center justify-between bg-surface-secondary/70 backdrop-blur-xs">
+        <div className="lg:col-span-7 bg-white border border-[#DDE7E5] rounded-3xl overflow-hidden shadow-xs flex flex-col h-[440px] relative">
+          <div className="p-3.5 px-4 border-b border-[#DDE7E5] flex items-center justify-between bg-[#F0F8F5]/80 backdrop-blur-xs">
             <div className="flex items-center gap-2">
-              <Box className="w-4 h-4 text-[#563843] dark:text-[#8FDBF6]" />
-              <h2 className="text-xs font-bold text-text">Digital Twin 3D Viewport</h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-surface border border-theme text-text-muted">
+              <Box className="w-4 h-4 text-[#2F8F83]" />
+              <h2 className="text-xs font-bold text-[#20332F]">3D Digital Twin — Coronal Cutaway</h2>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white border border-[#DDE7E5] text-[#71817D]">
                 v{twinState?.version_number || 1}
               </span>
             </div>
             <Link
               to="/twin"
-              className="text-xs font-semibold text-[#563843] dark:text-[#8FDBF6] hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-[#2F8F83] hover:text-[#21685F] flex items-center gap-1 transition-colors"
             >
-              <span>Explore in 3D</span>
+              <span>Full Workstation</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {/* Interactive Holographic 3D Viewport */}
+          {/* Interactive Three.js Viewport loading uterus.glb */}
           <div className="flex-1 relative">
             <HolographicViewport
               lesionLengthMm={twinState?.lesion_length_mm || 10.8}
               lesionWidthMm={twinState?.lesion_width_mm || 7.4}
               lesionDepthMm={twinState?.lesion_depth_mm || 6.8}
-              placementX={twinState?.placement_x || 0.18}
-              placementY={twinState?.placement_y || 0.38}
-              placementZ={twinState?.placement_z || -0.02}
+              placementX={twinState?.placement_x || 0.12}
+              placementY={twinState?.placement_y || 0.22}
+              placementZ={twinState?.placement_z || 0.00}
               showAnnotation={false}
               autoRotate={true}
-              showPedestal={false}
-              showParticles={true}
               showHudControls={false}
               initialViewMode="cutaway"
               className="w-full h-full"
             />
 
-            {/* Overlay hint */}
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none text-[10px] text-[#75F2FF]">
-              <span className="bg-[#002438]/85 backdrop-blur-xs px-2.5 py-1 rounded-xl border border-[#19D9FF]/30 shadow-xs">
+            {/* Bottom Overlay Pill */}
+            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none text-[10px] text-[#20332F]">
+              <span className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl border border-[#DDE7E5] shadow-xs font-medium">
                 Drag to rotate • Scroll to zoom
               </span>
-              <span className="bg-[#002438]/85 backdrop-blur-xs px-2.5 py-1 rounded-xl border border-[#19D9FF]/30 shadow-xs">
-                Holographic Cutaway Twin
+              <span className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl border border-[#DDE7E5] shadow-xs font-mono text-[#71817D]">
+                uterus.glb • Synthetic Lesion
               </span>
             </div>
           </div>
         </div>
 
-        {/* Right: Key Status & Longitudinal Metrics (5 Cols) */}
+        {/* Right: Telemetry & Calipers Card (5 Cols) */}
         <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
-          {/* Card: Current Lesion Dimensions */}
-          <div className="bg-surface border border-theme rounded-3xl p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between text-xs text-text-muted border-b border-theme pb-2">
-              <span className="font-semibold text-text">Current Lesion Dimensions</span>
+          {/* Card: Current Calipers */}
+          <div className="bg-white border border-[#DDE7E5] rounded-3xl p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between text-xs text-[#71817D] border-b border-[#DDE7E5] pb-2">
+              <span className="font-semibold text-[#20332F]">Lesion State Telemetry</span>
               <ProvenanceBadge type="DERIVED" size="xs" />
             </div>
 
             <div className="grid grid-cols-2 gap-3 pt-1">
               <div>
-                <span className="text-[11px] text-text-muted block">Longest Dimension (L)</span>
-                <div className="text-2xl font-extrabold font-mono tabular-nums text-text">
+                <span className="text-[11px] text-[#71817D] block">Longest Caliper (L)</span>
+                <div className="text-2xl font-extrabold font-mono tabular-nums text-[#20332F]">
                   {twinState ? twinState.lesion_length_mm.toFixed(1) : '—'}{' '}
-                  <span className="text-xs font-normal text-text-secondary">mm</span>
+                  <span className="text-xs font-normal text-[#71817D]">mm</span>
                 </div>
               </div>
               <div>
-                <span className="text-[11px] text-text-muted block">Width Dimension (W)</span>
-                <div className="text-2xl font-extrabold font-mono tabular-nums text-text">
+                <span className="text-[11px] text-[#71817D] block">Width Caliper (W)</span>
+                <div className="text-2xl font-extrabold font-mono tabular-nums text-[#20332F]">
                   {twinState ? twinState.lesion_width_mm.toFixed(1) : '—'}{' '}
-                  <span className="text-xs font-normal text-text-secondary">mm</span>
+                  <span className="text-xs font-normal text-[#71817D]">mm</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-theme flex items-center justify-between text-xs">
-              <span className="text-text-muted">Derived Volume (Ellipsoid):</span>
-              <span className="font-mono font-bold tabular-nums text-[#BD473B] dark:text-[#E0AEB2]">
+            <div className="pt-2 border-t border-[#DDE7E5] flex items-center justify-between text-xs">
+              <span className="text-[#71817D]">Derived Volume (Ellipsoid):</span>
+              <span className="font-mono font-bold tabular-nums text-[#B77B36]">
                 {twinState?.lesion_volume_mm3 ? `${twinState.lesion_volume_mm3.toFixed(1)} mm³` : '—'}
               </span>
             </div>
-          </div>
-
-          {/* Card: Longitudinal Growth Rate */}
-          <div className="bg-surface border border-theme rounded-3xl p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between text-xs text-text-muted border-b border-theme pb-2">
-              <span className="font-semibold text-text">Serial Growth Velocity</span>
-              <ProvenanceBadge type="DERIVED" size="xs" />
-            </div>
-
-            <div className="flex items-baseline justify-between pt-1">
-              <div>
-                <span className="text-2xl font-extrabold font-mono tabular-nums text-text">
-                  {twinState?.growth_rate_mm_per_month !== null && twinState?.growth_rate_mm_per_month !== undefined
-                    ? `${twinState.growth_rate_mm_per_month >= 0 ? '+' : ''}${twinState.growth_rate_mm_per_month.toFixed(2)}`
-                    : 'Baseline'}
-                </span>
-                <span className="text-xs font-medium text-text-secondary ml-1">mm / month</span>
-              </div>
-              <span className="text-[10px] text-text-muted font-mono">
-                {twinState?.elapsed_days_since_previous
-                  ? `Interval: ${twinState.elapsed_days_since_previous} days`
-                  : '≥ 2 serial observations'}
-              </span>
-            </div>
-
-            <p className="text-[11px] text-text-muted pt-1">
-              Delta longest dimension: {twinState?.delta_longest_dimension_mm !== undefined
-                ? `${twinState.delta_longest_dimension_mm >= 0 ? '+' : ''}${twinState.delta_longest_dimension_mm.toFixed(1)} mm`
-                : 'Baseline observation'}
-            </p>
-          </div>
-
-          {/* Card: Latest Observation & Device Sync */}
-          <div className="bg-surface border border-theme rounded-3xl p-5 shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs border-b border-theme pb-2">
-              <span className="font-semibold text-text">Latest Recorded Observation</span>
-              <span className="text-[10px] font-mono text-text-muted">
-                {observations.length} Scans on File
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-xs pt-1">
-              <span className="text-text-muted">Observation Date:</span>
-              <span className="font-mono font-medium text-text">
-                {latestObs ? new Date(latestObs.observed_at).toLocaleDateString() : '—'}
-              </span>
-            </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-text-muted">Data Source:</span>
-              <ProvenanceBadge type={latestObs?.source || 'SIMULATED'} size="xs" />
-            </div>
-
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-text-muted">Measurement Confidence:</span>
-              <span className="font-mono text-emerald-700 dark:text-emerald-300 font-semibold tabular-nums">
-                {latestObs ? `${(latestObs.measurement_confidence * 100).toFixed(0)}%` : '—'}
+              <span className="text-[#71817D]">Interval Growth Rate:</span>
+              <span className="font-mono font-bold tabular-nums text-[#20332F]">
+                {twinState?.growth_rate_mm_per_month !== null && twinState?.growth_rate_mm_per_month !== undefined
+                  ? `${twinState.growth_rate_mm_per_month >= 0 ? '+' : ''}${twinState.growth_rate_mm_per_month.toFixed(2)} mm/mo`
+                  : 'Baseline (v1)'}
               </span>
             </div>
           </div>
+
+          {/* Longitudinal Trend Chart (Compact) */}
+          <LongitudinalChart observations={observations} compact={true} />
         </div>
       </div>
 
-      {/* 3. Research & Non-Claim Regulatory Notice */}
-      <div className="bg-surface border border-theme rounded-3xl p-4 sm:p-5 shadow-xs flex items-center justify-between gap-4 text-xs text-text-secondary">
+      {/* 4. Recent Observations Records Table */}
+      <div className="bg-white border border-[#DDE7E5] rounded-3xl p-5 shadow-xs space-y-3">
+        <div className="flex items-center justify-between border-b border-[#DDE7E5] pb-3">
+          <div className="flex items-center gap-2">
+            <ListOrdered className="w-4 h-4 text-[#2F8F83]" />
+            <h3 className="text-xs font-bold text-[#20332F] uppercase tracking-wider">
+              Recent Persisted Observations
+            </h3>
+          </div>
+          <Link
+            to="/observations"
+            className="text-xs font-semibold text-[#2F8F83] hover:text-[#21685F] flex items-center gap-1 transition-colors"
+          >
+            <span>View All ({observations.length})</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {observations.length === 0 ? (
+          <div className="py-8 text-center text-xs text-[#71817D]">
+            No observations on file for this patient. Click "Begin Assessment" above to run a simulated acquisition.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#F0F8F5]/80 border-b border-[#DDE7E5] text-[#71817D] text-[10px] font-bold uppercase tracking-wider">
+                <tr>
+                  <th className="py-2.5 px-3">Date</th>
+                  <th className="py-2.5 px-3">Provenance</th>
+                  <th className="py-2.5 px-3">Length (L)</th>
+                  <th className="py-2.5 px-3">Width (W)</th>
+                  <th className="py-2.5 px-3">Volume</th>
+                  <th className="py-2.5 px-3">Confidence</th>
+                  <th className="py-2.5 px-3 text-right">Inspect</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#DDE7E5]">
+                {observations.slice(-4).reverse().map((obs) => (
+                  <tr key={obs.id} className="hover:bg-[#F0F8F5]/50 transition-colors">
+                    <td className="py-3 px-3 font-mono font-medium text-[#20332F]">
+                      {new Date(obs.observed_at).toLocaleDateString()}
+                    </td>
+                    <td className="py-3 px-3">
+                      <ProvenanceBadge type={obs.source} size="xs" />
+                    </td>
+                    <td className="py-3 px-3 font-mono font-bold text-[#20332F] tabular-nums">
+                      {obs.length_mm.toFixed(1)} mm
+                    </td>
+                    <td className="py-3 px-3 font-mono font-bold text-[#20332F] tabular-nums">
+                      {obs.width_mm.toFixed(1)} mm
+                    </td>
+                    <td className="py-3 px-3 font-mono text-[#B77B36] font-bold tabular-nums">
+                      {obs.measurements?.volume_mm3 ? `${obs.measurements.volume_mm3.toFixed(1)} mm³` : '—'}
+                    </td>
+                    <td className="py-3 px-3 font-mono text-[#71817D] tabular-nums">
+                      {(obs.measurement_confidence * 100).toFixed(0)}%
+                    </td>
+                    <td className="py-3 px-3 text-right">
+                      <Link
+                        to="/twin"
+                        className="px-2 py-1 rounded-lg border border-[#DDE7E5] bg-white hover:bg-[#F0F8F5] text-[10px] font-semibold inline-flex items-center gap-1 transition-colors"
+                      >
+                        <Eye className="w-3 h-3 text-[#2F8F83]" />
+                        <span>3D</span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* 5. Non-Claim Regulatory Notice */}
+      <div className="bg-white border border-[#DDE7E5] rounded-3xl p-4 sm:p-5 shadow-xs flex items-center justify-between gap-4 text-xs text-[#71817D]">
         <div className="flex items-center gap-3">
-          <ShieldAlert className="w-5 h-5 text-[#563843] dark:text-[#E0AEB2] shrink-0" />
+          <ShieldAlert className="w-5 h-5 text-[#B77B36] shrink-0" />
           <span>
-            <strong>Academic Proof-of-Concept Notice:</strong> POLYPULSE is not clinically certified and provides no medical diagnosis or malignancy evaluation. 3D models and ultrasound viewports are synthetic software simulations.
+            <strong className="text-[#20332F]">Academic Research Proof-of-Concept:</strong> POLYPULSE demonstration assessments and illustrative geometry are not clinical findings and must not be used for diagnosis or treatment decisions.
           </span>
         </div>
-        <Link
-          to="/observations"
-          className="text-xs font-semibold text-[#563843] dark:text-[#8FDBF6] hover:underline shrink-0 hidden sm:block"
-        >
-          View Full Timeline →
-        </Link>
       </div>
 
       {/* Scanning Modal if triggered from Overview */}

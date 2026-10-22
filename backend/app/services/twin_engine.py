@@ -125,9 +125,9 @@ def process_new_observation(
     if previous_obs and previous_obs.measurements and previous_obs.measurements.volume_mm3 and vol_mm3:
         delta_volume = round(vol_mm3 - previous_obs.measurements.volume_mm3, 2)
 
-    # Procedural illustrative coordinates for polyp attachment inside endometrial cavity
-    placement_x = 0.15 + (next_version_num % 3) * 0.05
-    placement_y = 0.35 + (next_version_num % 2) * 0.08
+    # Procedural illustrative coordinates for polyp attachment inside endometrial cavity (uterus.glb)
+    placement_x = 0.12
+    placement_y = 0.22
     placement_z = 0.0
 
     twin_version = TwinStateVersion(
