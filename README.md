@@ -270,6 +270,6 @@ Public accessibility of the files and links below has **not yet been verified**.
 
 | Resource | Location | Status |
 |---|---|---|
-| Presentation video (unlisted YouTube) | Not yet provided | Pending |
+| Presentation video (unlisted YouTube) | Not yet provided |
 | Architecture diagram (PDF) | `Architecture_diagram_PolyPluse.pdf` |
 | Presentation (PDF) | `PolyPulse.pdf` |
