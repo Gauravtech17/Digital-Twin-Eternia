@@ -266,7 +266,7 @@ The pipeline is intended to support scan uploads, metadata handling, image proce
 
 ## Public Accessibility of Files and Links
 
-Public accessibility of the files and links below has **not yet been verified**.
+Public accessibility of the files and links are below.
 
 | Resource | Location | Status |
 |---|---|---|
