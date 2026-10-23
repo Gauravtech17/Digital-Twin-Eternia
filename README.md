@@ -216,7 +216,7 @@ The models and frameworks below are **proposed for development and evaluation**.
 
 ## Presentation Video
 
-<!-- Presentation video will be added here. -->
+[<!-- Presentation video will be added here. -->](https://drive.google.com/file/d/1lidnOrEiIqOkvcEANlxQwEP5bjhyhpIy/view?usp=sharing)
 
 ## Open-Source Licence Details
 
@@ -270,6 +270,6 @@ Public accessibility of the files and links below has **not yet been verified**.
 
 | Resource | Location | Status |
 |---|---|---|
-| Presentation video (unlisted YouTube) | Not yet provided |
+| Presentation video (unlisted YouTube) | [Not yet provided ](https://drive.google.com/file/d/1lidnOrEiIqOkvcEANlxQwEP5bjhyhpIy/view?usp=sharing)|
 | Architecture diagram (PDF) | `Architecture_diagram_PolyPluse.pdf` |
 | Presentation (PDF) | `PolyPulse.pdf` |
