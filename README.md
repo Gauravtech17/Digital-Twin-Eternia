@@ -233,7 +233,7 @@ The licensing model for original POLYPULSE software has not yet been determined.
 
 ## Architecture Diagram
 
-**System architecture diagram (PDF):**  [Architecture_diagram_PDF](<Architecture diagram PolyPluse.pdf>)
+**System architecture diagram (PDF):**  [[Architecture_diagram_PDF](<Architecture diagram PolyPluse.pdf>)](https://drive.google.com/file/d/152CNvmthTjRx2s-SD-sohh_TYeoc9dk4/view?usp=sharing)
 
 The architecture is organised into three layers. All components below describe the **proposed** design unless stated otherwise in [Current Implementation Status](#current-implementation-status).
 
@@ -262,7 +262,7 @@ The pipeline is intended to support scan uploads, metadata handling, image proce
 
 ## Presentation
 
-**Project presentation (PDF):** [PolyPulse.pdf](PolyPulse.pdf)
+**Project presentation (PDF):** [[PolyPulse.pdf](PolyPulse.pdf) https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)
 
 ## Public Accessibility of Files and Links
 
