@@ -268,8 +268,8 @@ The pipeline is intended to support scan uploads, metadata handling, image proce
 
 Public accessibility of the files and links are below.
 
-| Resource | Location | Status |
-|---|---|---|
+| Resource | Location |
+|---|---|
 | Presentation video (unlisted YouTube) | [Demo Video](https://youtu.be/_9Z3t92bk8I)|
 | Architecture diagram (PDF) | `[Architecture Diagram](https://drive.google.com/file/d/152CNvmthTjRx2s-SD-sohh_TYeoc9dk4/view?usp=sharing) |
 | Presentation (PDF) | `[PolyPulse Presentation](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)|
