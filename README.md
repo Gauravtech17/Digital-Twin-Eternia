@@ -216,7 +216,7 @@ The models and frameworks below are **proposed for development and evaluation**.
 
 ## Presentation Video
 
-[Demo Video] https://drive.google.com/file/d/1-1sRnUTbnWUIyBHvsxJPmPoKTX94eHZL/view?usp=sharing
+[Demo Video]https://youtu.be/_9Z3t92bk8I
 
 ## Open-Source Licence Details
 
@@ -262,7 +262,7 @@ The pipeline is intended to support scan uploads, metadata handling, image proce
 
 ## Presentation
 
-**Project presentation (PDF):** [[PolyPulse.pdf](PolyPulse.pdf) https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)
+**Project presentation (PDF):** [[PolyPulse.pdf](PolyPulse.pdf)https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)
 
 ## Public Accessibility of Files and Links
 
@@ -270,6 +270,6 @@ Public accessibility of the files and links are below.
 
 | Resource | Location | Status |
 |---|---|---|
-| Presentation video (unlisted YouTube) | [Demo Video](https://drive.google.com/file/d/1lidnOrEiIqOkvcEANlxQwEP5bjhyhpIy/view?usp=sharing)|
-| Architecture diagram (PDF) | `Architecture_diagram_PolyPluse.pdf` |
-| Presentation (PDF) | `PolyPulse.pdf` |
+| Presentation video (unlisted YouTube) | [Demo Video](https://youtu.be/_9Z3t92bk8I)|
+| Architecture diagram (PDF) | `[Architecture_diagram_PDF]` |
+| Presentation (PDF) | `[PolyPulse Presentation](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)` |
