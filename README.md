@@ -262,7 +262,7 @@ The pipeline is intended to support scan uploads, metadata handling, image proce
 
 ## Presentation
 
-**Project presentation (PDF):** [[PolyPulse.pdf](PolyPulse.pdf)https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)
+**Project presentation (PDF):** [[PolyPulse.pdf](PolyPulse.pdf)](https://drive.google.com/file/d/1h_RolVe2KlTiM7ZI6wHJjrmd7oFvjrpO/view?usp=sharing)
 
 ## Public Accessibility of Files and Links
 
